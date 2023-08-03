@@ -1,32 +1,39 @@
 services:
   api:
-    image: node:18
+    build:
+      context: ./api/.
+      dockerfile: Dockerfile
     container_name: api
-    working_dir: /workspace/api
+    ports:
+      - 4001:4001
     volumes:
       - "./api/:/workspace/api"
     restart: always
-    entrypoint: ["npm", "start"]
-
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.1
-    hostname: zookeeper
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      - ZOOKEEPER_CLIENT_PORT=32181
+      ZOOKEEPER_CLIENT_PORT: 2181
     ports:
-      - 32181:32181
+      - 2181:2181
 
   kafka:
-    image: confluentinc/cp-kafka
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
-    hostname: kafka
+      - 9092:9092
+      - 9094:9094
+   
     environment:
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:32181
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENERS: INTERNAL://:9092,localhost://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,localhost://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,localhost:PLAINTEXT
 
   database:
     image: postgres
@@ -34,3 +41,13 @@ services:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     env_file:
       - .env
+
+  topics:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - kafka
+      - database
+    command: >+
+      bash -c
+        "sleep 5s &&
+        kafka-topics --create --topic=taskrunner --if-not-exists --bootstrap-server=kafka:9092"

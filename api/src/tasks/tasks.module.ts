@@ -6,7 +6,7 @@ import { TasksService } from './tasks.service';
   controllers: [TasksController],
   imports: [
     ClientsModule.register([{
-      name: "TASK_SERVICE",
+      name: "TASK_PRODUCER",
       transport: Transport.KAFKA,
       options: {
         client: {
