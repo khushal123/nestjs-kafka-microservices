@@ -1,0 +1,36 @@
+services:
+  api:
+    image: node:18
+    container_name: api
+    working_dir: /workspace/api
+    volumes:
+      - "./api/:/workspace/api"
+    restart: always
+    entrypoint: ["npm", "start"]
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=32181
+    ports:
+      - 32181:32181
+
+  kafka:
+    image: confluentinc/cp-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    hostname: kafka
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:32181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 
+
+  database:
+    image: postgres
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    env_file:
+      - .env
