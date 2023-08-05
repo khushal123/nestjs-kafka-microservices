@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TasksController } from './tasks.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices'
 import { TasksService } from './tasks.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 @Module({
   controllers: [TasksController],
   imports: [
+    PrismaModule,
     ClientsModule.register([{
-      name: "TASK_PRODUCER",
+      name: "KAFKA_SERVICE",
       transport: Transport.KAFKA,
       options: {
         client: {
@@ -17,8 +20,8 @@ import { TasksService } from './tasks.service';
           groupId: "tasks-consumer"
         }
       }
-    }]),
+    }])
   ],
-  providers: [TasksService]
+  providers: [TasksService, PrismaService]
 })
 export class TasksModule { }
