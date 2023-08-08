@@ -1,32 +1,52 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { v4 as uuidv4 } from 'uuid'
-import { ClientKafka } from '@nestjs/microservices';
+import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 
 @Injectable()
-export class TasksService {
-    constructor(
-        @Inject("KAFKA_SERVICE") private producerService: ClientKafka,
-        private prismaService: PrismaService) {
+export class TasksService implements OnModuleInit, OnModuleDestroy {
+
+    @Client({
+        transport: Transport.KAFKA,
+        options: {
+            client: {
+                clientId: 'myApp',
+                brokers: ['localhost:9094'],
+            },
+            consumer: { groupId: 'myGroup' },
+        },
+    })
+    producerService: ClientKafka
+
+    constructor() {
+
     }
 
-    private getUUID(): string {
-        return uuidv4()
+
+    async onModuleDestroy() {
+        await this.producerService.close()
     }
 
+    async onModuleInit() {
+        await this.producerService.subscribeToResponseOf("taskrunner")
+        await this.producerService.connect()
+    }
 
     async create(createTaskDto: CreateTaskDto) {
-        createTaskDto.taskId = this.getUUID()
-        const task: CreateTaskDto = await this.prismaService.task.create({
-            data: createTaskDto,
-        });
-        
-        return createTaskDto
+        try {
+
+        } catch (error) {
+            throw error
+        }
     }
 
-
     async findAll() {
-        return this.prismaService.task.findMany()
+    }
+
+    async updateTaskStatus(id: number, status: string) {
+        try {
+            return { id, status }
+        } catch (error) {
+            throw error
+        }
     }
 }

@@ -1,13 +1,34 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { AppService } from './app.service';
-import { EventPattern } from '@nestjs/microservices';
+import { Client, ClientKafka, EventPattern, Transport } from '@nestjs/microservices';
 
 @Controller()
-export class AppController {
+export class AppController implements OnModuleInit, OnModuleDestroy {
+
+  @Client({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        clientId: 'myApp',
+        brokers: ['localhost:9094'],
+      },
+      consumer: { groupId: 'myGroup' },
+    },
+  })
+  consumerService: ClientKafka
+
+  async onModuleInit() {
+    await this.consumerService.connect()
+  }
+
+  async onModuleDestroy() {
+    await this.consumerService.close()
+  }
+
   constructor(private readonly appService: AppService) { }
 
-  @EventPattern("task_created")
+  @EventPattern("taskrunner")
   async handleTaskCreated(data: Record<string, unknown>) {
-    console.log(data)
+    return this.appService.handleTaskCreated(data, this.consumerService)
   }
 }

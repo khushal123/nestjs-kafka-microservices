@@ -12,7 +12,7 @@ datasource db {
 
 model Task {
   id         Int      @id @default(autoincrement())
-  taskId    String   @unique
+  taskId     String   @unique
   status     Status   @default(RUNNING)
   numOfTasks Int
   createdAt  DateTime @default(now())

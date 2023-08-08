@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -7,16 +7,16 @@ export class TasksController {
 
     @Post()
     async createTask(@Body() taskBody: any) {
-        return this.taskService.create(taskBody)
+        return await this.taskService.create(taskBody)
     }
 
     @Get()
     async getAllTasksStatus() {
-        return this.taskService.findAll()
+        return await this.taskService.findAll()
     }
 
     @Patch(":id")
-    async updateTaskStatus(@Param() idDto: IdDto, @Body() taskBody: TaskBodyDto) {
+    async updateTaskStatus(@Param() idDto: IdDto, @Body() taskBody: TaskBodyDto){
         return await this.taskService.updateTaskStatus(idDto.id, taskBody.status)
     }
 }

@@ -49,5 +49,6 @@ services:
       - database
     command: >+
       bash -c
-        "sleep 5s &&
-        kafka-topics --create --topic=taskrunner --if-not-exists --bootstrap-server=kafka:9092"
+        "sleep 5s && 
+        kafka-topics --create --topic=taskrunner --if-not-exists --bootstrap-server=kafka:9092 &&
+        kafka-topics --create --topic=taskstatus --if-not-exists --bootstrap-server=kafka:9092"
