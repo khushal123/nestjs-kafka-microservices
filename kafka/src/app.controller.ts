@@ -28,7 +28,7 @@ export class AppController implements OnModuleInit, OnModuleDestroy {
   constructor(private readonly appService: AppService) { }
 
   @EventPattern("taskrunner")
-  async handleTaskCreated(data: Record<string, unknown>) {
-    return this.appService.handleTaskCreated(data, this.consumerService)
+  async handleTaskCreated(data: Record<string, string>) {
+    return this.appService.handleTaskCreated(data)
   }
 }
