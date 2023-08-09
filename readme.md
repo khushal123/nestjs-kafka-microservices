@@ -1,6 +1,7 @@
+[![Alt text]([http://full/path/to/img.jpg "Optional title"](https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing))
+](https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing)
+
 # Project README
-# Demo
-![Alt text]("https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing")
 This repository provides a multi-container setup to manage tasks through interconnected services: API, frontend, task service, Kafka consumer, and a PostgreSQL database. This setup is vital for task management and updates notification to the frontend.
 
 ## Architecture Overview
