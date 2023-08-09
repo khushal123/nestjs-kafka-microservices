@@ -37,14 +37,14 @@ export class TasksService implements OnModuleDestroy, OnModuleInit {
     }
     async create(createTaskDto: CreateTaskDto) {
         try {
-            const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}tasks/`
+            const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}/tasks/`
             console.log(createTaskDto)
             const apiCall = await this.httpService.axiosRef.post(url, createTaskDto)
             const createdTask: TaskDto = apiCall.data
             this.producerService.emit(this.KAFKA_TASKRUNNER, createdTask)
             return createdTask
         } catch (error) {
-            // console.error(error)
+            console.error(error)
             throw error
         }
     }
@@ -52,7 +52,7 @@ export class TasksService implements OnModuleDestroy, OnModuleInit {
 
     async getTask(id: number) {
         try {
-            const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}tasks/${id}`
+            const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}/tasks/${id}`
             const apiCall = await this.httpService.axiosRef.get(url)
             const taskList: Array<TaskDto> = apiCall.data
             return taskList
@@ -64,7 +64,7 @@ export class TasksService implements OnModuleDestroy, OnModuleInit {
 
     async findAll() {
         try {
-            const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}tasks`
+            const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}/tasks`
             console.log(url)
             const apiCall = await this.httpService.axiosRef.get(url)
             const taskList: Array<TaskDto> = apiCall.data

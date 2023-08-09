@@ -72,8 +72,8 @@ export class TasksService {
 
     async updateTaskStatusToApi(id: number, status: string) {
         try {
-            const url = `${this.configService.get("API_BASE_URL")}tasks/${id}`
-            console.log(url)
+            const url = `${this.configService.get("API_SERVICE_URL")}/tasks/${id}`
+            console.log(this.configService.get("API_SERVICE_URL"), "API_SERVICE_URL")
             const apiCall = await this.httpService.axiosRef.patch(url, {
                 status
             })

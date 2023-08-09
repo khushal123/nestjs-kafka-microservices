@@ -1,7 +1,5 @@
 services:
   database:
-    networks:
-      - kafka-network
     image: postgres
     container_name: database
     ports:
@@ -10,8 +8,6 @@ services:
       - .env
 
   task-service:
-    networks:
-      - kafka-network
     hostname: task-service
     env_file:
       - .env
@@ -29,8 +25,6 @@ services:
 
   zookeeper:
     hostname: zookeeper
-    networks:
-      - kafka-network
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -39,26 +33,24 @@ services:
       - 2181:2181
     extra_hosts:
       - "localhost: 127.0.0.1"
+    
 
   kafka:
-    networks:
-      - kafka-network
+    restart: always 
     image: confluentinc/cp-kafka:latest
     container_name: kafka
     depends_on:
       - zookeeper
     ports:
-      - 9092:9092
-      - 9094:9094
-    extra_hosts:
-      - "localhost: 127.0.0.1"
+      - "9092:9092"
+      - "9094:9094"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_LISTENERS: INTERNAL://:9092,localhost://:9094
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://localhost:9092,localhost://localhost:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,localhost://localhost:9094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,localhost:PLAINTEXT
 
   topics:
@@ -69,11 +61,24 @@ services:
       bash -c
         "sleep 5s &&
         kafka-topics --create --topic=taskrunner --if-not-exists --bootstrap-server=kafka:9092"
+        
+  consumer:
+    restart: always
+    build:
+      context: ./kafka/
+      dockerfile: Dockerfile
+    container_name: consumer
+    depends_on:
+      - topics
+    volumes:
+      - "./api/:/workspace/api"
+    env_file:
+      - ./.env
+    environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
 
   api:
     hostname: api
-    networks:
-      - kafka-network
     build:
       context: ./api/
       dockerfile: Dockerfile
@@ -88,32 +93,15 @@ services:
       - ./.env
     environment:
       - KAFKA_BROKERS=${KAFKA_BROKERS}
-
-  consumer:
-    networks:
-      - kafka-network
-    build:
-      context: ./kafka/
-      dockerfile: Dockerfile
-    container_name: consumer
-    depends_on:
-      - kafka
-    volumes:
-      - "./api/:/workspace/api"
-    env_file:
-      - ./.env
-    environment:
-      - KAFKA_BROKERS=${KAFKA_BROKERS}
+    restart: always
 
   frontend:
-    networks:
-      - kafka-network
     container_name: frontend
     build: 
       context: ./frontend/
       dockerfile: Dockerfile
     depends_on:
-      - api
+      - consumer
     volumes:
       - "./frontend/:/workspace/frontend"
     restart: always
@@ -121,7 +109,7 @@ services:
       - ./.env
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    environment:
+      - PORT=${FRONTEND_PORT}
+      - REACT_APP_API_URL=${API_BASE_URL}
 
-networks:
-  kafka-network:
-    driver: host

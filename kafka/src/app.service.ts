@@ -39,7 +39,7 @@ export class AppService {
   }
   private async updateTaskStatus(id: number, status: string) {
     try {
-      const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}tasks/${id}`
+      const url = `${this.configService.get("TASK_SERVICE_BASE_URL")}/tasks/${id}`
       const task = await this.httpService.axiosRef.patch(url, {
         status
       })

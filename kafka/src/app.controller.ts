@@ -10,7 +10,7 @@ export class AppController implements OnModuleInit, OnModuleDestroy {
     options: {
       client: {
         clientId: 'myApp',
-        brokers: ['localhost:9094'],
+        brokers: (process.env.KAFKA_BROKERS).split(","),
       },
       consumer: { groupId: 'myGroup' },
     },

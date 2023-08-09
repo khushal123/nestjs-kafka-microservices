@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { io } from 'socket.io-client';
+import { API_URL } from '../constants'
 
 
 
 export function TaskForm() {
-    const apiUrl = "http://api:3002"
+    const apiUrl: string = API_URL || "http://localhost:5003"
     const [taskStatus, setTaskStatus] = useState('');
     const [taskId, setTaskId] = useState('');
+    console.log(apiUrl)
     const socket = io(apiUrl)
-   
+
     socket.on("taskstatus", (message) => {
         setTaskStatus(message.status || taskStatus)
     })
