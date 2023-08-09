@@ -1,5 +1,16 @@
 
 export class CreateTaskDto {
     numOfTasks: number
-    taskId: string
+}
+
+export class TaskDto extends CreateTaskDto {
+    status: Status
+    createdAt: Date
+    updatedAt: Date
+}
+
+enum Status {
+    COMPLETED,
+    FAILED,
+    RUNNING
 }

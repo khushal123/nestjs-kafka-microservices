@@ -15,6 +15,17 @@ export class TasksController {
         return this.taskService.findAll()
     }
 
+
+    @Get(":id")
+    async getTask(@Param() idDto: IdDto) {
+        try {
+            const task = await this.taskService.getTask(idDto.id)
+            return task
+        } catch (error) {
+            throw error
+        }
+    }
+
     @Patch(":id")
     async updateTaskStatus(@Param() idDto: IdDto, @Body() taskBody: TaskBodyDto) {
         return await this.taskService.updateTaskStatus(idDto.id, taskBody.status)

@@ -1,6 +1,10 @@
+import { Type } from "class-transformer";
+import { IsNumber, IsNumberString } from "class-validator";
 
 export class CreateTaskDto {
-    numOfTasks: number
+    @IsNumber()
+    @Type(() => Number)
+    numOfTasks: any
     taskId: string
 }
 

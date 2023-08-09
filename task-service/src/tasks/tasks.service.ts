@@ -18,14 +18,28 @@ export class TasksService {
     async create(createTaskDto: CreateTaskDto) {
         try {
             createTaskDto.taskId = this.getUUID()
+            console.log(createTaskDto)
             const task = await this.prismaService.task.create({
                 data: createTaskDto
             })
             return task
         } catch (error) {
-            throw error
+            console.error(error)
+            return error
         }
     }
+
+    async getTask(id: number) {
+        try {
+            return await this.prismaService.task.findFirst({where: {
+                id: Number(id)
+            }})
+        } catch (error) {
+            console.error(error)
+            return error
+        }
+    }
+
 
 
     private getTaskStatus(status: string): TaskStatusDto {
@@ -51,19 +65,22 @@ export class TasksService {
             await this.updateTaskStatusToApi(id, status)
             return task
         } catch (error) {
-            throw error
+            console.error(error)
+            return error
         }
     }
 
     async updateTaskStatusToApi(id: number, status: string) {
         try {
-            const url = `${this.configService.get("API_BASE_URL")}${id}`
+            const url = `${this.configService.get("API_BASE_URL")}tasks/${id}`
+            console.log(url)
             const apiCall = await this.httpService.axiosRef.patch(url, {
                 status
             })
             return apiCall
         } catch (error) {
-            throw error
+            console.error(error)
+            return error
         }
     }
 
