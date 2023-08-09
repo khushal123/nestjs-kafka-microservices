@@ -1,4 +1,5 @@
 [Demo](https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing)
+
 # Project README
 This repository provides a multi-container setup to manage tasks through interconnected services: API, frontend, task service, Kafka consumer, and a PostgreSQL database. This setup is vital for task management and updates notification to the frontend.
 
@@ -21,7 +22,7 @@ This repository provides a multi-container setup to manage tasks through interco
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/khushal123/nestjs-kafka-microservices.git
-   cd https://github.com/khushal123/nestjs-kafka-microservices.git
+   cd nestjs-kafka-microservices
    ```
 
 2. **Environment Configuration**:
