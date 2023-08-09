@@ -20,12 +20,12 @@ This repository provides a multi-container setup to manage tasks through interco
 
 1. **Clone the Repository**:
    ```bash
-   git clone [REPOSITORY_URL]
-   cd [REPOSITORY_DIRECTORY]
+   git clone https://github.com/khushal123/nestjs-kafka-microservices.git
+   cd https://github.com/khushal123/nestjs-kafka-microservices.git
    ```
 
 2. **Environment Configuration**:
-   Instead of creating a new `.env` file, copy the provided `.env.example` and rename it to `.env`. Adjust the values inside this file according to your system requirements.
+   Create a new `.env` file by copying the provided `.env.example` and rename it to `.env`. Adjust the values inside this file according to your system requirements.
    ```bash
    cp .env.example .env
    ```
