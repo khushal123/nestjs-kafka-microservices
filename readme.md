@@ -1,4 +1,4 @@
-[![Alt text]([http://full/path/to/img.jpg "Optional title"](https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing))
+(https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing))
 ](https://drive.google.com/file/d/17zwh7WsdDYgwBBXiYfNTNWN94rNxBZbn/view?usp=sharing)
 
 
