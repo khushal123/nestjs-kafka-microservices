@@ -1,4 +1,6 @@
 # Project README
+# Demo
+![Uploading microsercices recording.gif…]()
 
 This repository provides a multi-container setup to manage tasks through interconnected services: API, frontend, task service, Kafka consumer, and a PostgreSQL database. This setup is vital for task management and updates notification to the frontend.
 
@@ -57,5 +59,4 @@ To interact with the services, you can use the provided Postman collection. Foll
    - **Get All Tasks**: Fetch a list of all tasks with this GET request.
    - **Get Task**: Retrieve details of a specific task.
 
-Remember to adjust the body of the requests or the endpoints as per your requirements.
 
